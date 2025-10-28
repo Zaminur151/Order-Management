@@ -47,7 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context, setModalState) {
                       return Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: Column(                        
+                      child: Column(               
+                        crossAxisAlignment: CrossAxisAlignment.start,         
                         children: [
                           Text('Enter dish name:',),
                           SizedBox(height: 10,),
@@ -77,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             divisions: 2,
                             min: 100,
                             max: 300,
-                            label: spice.round().toString(),
+                            label: spice.round() == 100 ? 'Low' : spice.round() == 200 ? 'Medium' : 'High',
                             onChanged: (val){
                               setModalState(() {
                                 spice = val;
@@ -85,22 +86,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             }
                           ),
                           SizedBox(height: 20,),
-                          ElevatedButton(
-                            onPressed: ()async{
-                              String uid = randomString(10);
-                              String dish = dishContoller.text.trim();
-                              String softDrings = dringsContoller.text.trim();
-
-                              print('uid: $uid, dish: $dish, softDr: $softDrings, spice: $spice');
-                              await database.addToDatabase(uid, dish, softDrings, spice);
-                              setState(() {
-                                dishContoller.text= '';
-                                dringsContoller.text = '';
-                                spice = 100.0;
-                              });
-                              Navigator.pop(context);
-                            }, 
-                            child: Text('Confirm Order')
+                          Center(
+                            child: ElevatedButton(
+                              onPressed: ()async{
+                                String uid = randomString(10);
+                                String dish = dishContoller.text.trim();
+                                String softDrings = dringsContoller.text.trim();
+                            
+                                print('uid: $uid, dish: $dish, softDr: $softDrings, spice: $spice');
+                                await database.addToDatabase(uid, dish, softDrings, spice);
+                                setState(() {
+                                  dishContoller.text= '';
+                                  dringsContoller.text = '';
+                                  spice = 100.0;
+                                });
+                                Navigator.pop(context);
+                              }, 
+                              child: Text('Confirm Order')
+                            ),
                           )
                         ],
                       ),
@@ -112,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Icon(Icons.add),
           ),
           body: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ListView.builder(
               itemCount: docs.length,
               itemBuilder: (contex, index){
@@ -122,14 +125,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisSize: MainAxisSize.min,
                     children: [ 
-                      Column(
-                        children: [
-                          Text(orderList['dish']),
-                          SizedBox(height: 20,),
-                          Text(orderList['softDr']),
-                          SizedBox(height: 20,),
-                          Text(orderList['spice'].toString()),                      
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Food : ${orderList['dish']}"),
+                            SizedBox(height: 8,),
+                            Text("Soft Drings : ${orderList['softDr']}"),
+                            SizedBox(height: 8,),
+                            Text("Spice : ${orderList['spice'] == 100? 'Low' : orderList['spice'] == 200? 'Medium' : 'High'}"),                      
+                          ],
+                        ),
                       ),
                       Column(
                         children: [
@@ -147,7 +155,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   builder: (context, setModalState) {
                                     return Padding(
                                     padding: const EdgeInsets.all(20.0),
-                                    child: Column(                        
+                                    child: Column( 
+                                      crossAxisAlignment: CrossAxisAlignment.start,                       
                                       children: [
                                         Text('Enter dish name:',),
                                         SizedBox(height: 10,),
@@ -176,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           divisions: 2,
                                           min: 100,
                                           max: 300,
-                                          label: spiceUpdate.round().toString(),
+                                          label: spiceUpdate.round() == 100 ? 'Low' : spiceUpdate.round() == 200 ? 'Medium' : 'High',
                                           onChanged: (val){
                                             setModalState(() {
                                               spiceUpdate = val;
@@ -184,16 +193,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                           }
                                         ),
                                         SizedBox(height: 20,),
-                                        ElevatedButton(
-                                          onPressed: ()async{
-                                            String uid = orderList['uid'];
-                                            String newDish = dishUpdateCtr.text.trim();
-                                            String newSoftDrings = softDringsCtr.text.trim();
-                                            print('uid: $uid, dish: $newDish, softDr: $newSoftDrings, spice: $spiceUpdate');
-                                            await database.updateData(uid, newDish, newSoftDrings, spiceUpdate);
-                                            Navigator.pop(context);
-                                          }, 
-                                          child: Text('Update Order')
+                                        Center(
+                                          child: ElevatedButton(
+                                            onPressed: ()async{
+                                              String uid = orderList['uid'];
+                                              String newDish = dishUpdateCtr.text.trim();
+                                              String newSoftDrings = softDringsCtr.text.trim();
+                                              print('uid: $uid, dish: $newDish, softDr: $newSoftDrings, spice: $spiceUpdate');
+                                              await database.updateData(uid, newDish, newSoftDrings, spiceUpdate);
+                                              Navigator.pop(context);
+                                            }, 
+                                            child: Text('Update Order')
+                                          ),
                                         )
                                       ],
                                     ),
