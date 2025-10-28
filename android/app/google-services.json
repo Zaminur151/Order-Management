@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "37325586677",
+    "project_id": "order-management-e22e4",
+    "storage_bucket": "order-management-e22e4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37325586677:android:c3aa6d67fc0aa1d69305bc",
+        "android_client_info": {
+          "package_name": "com.example.order_manager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1BECxpB3gsLBeGWyuI-ZxNvr4H-fUvaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

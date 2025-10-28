@@ -2,6 +2,8 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:order_manager/screen/home/order_list.dart';
+import 'package:order_manager/service/database.dart';
+import 'package:random_string/random_string.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,6 +13,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  final DatabaseService FireStore = DatabaseService();
 
   final List<DropdownMenuEntry<String>> dropDownItems = [
     DropdownMenuEntry(value: 'Mojo', label: 'Mojo'),
@@ -39,7 +43,81 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          print('Add');
+          showModalBottomSheet(
+                                    context: context, builder: (contex){
+                                      return StatefulBuilder(
+                                        builder: (context, setModalState) {
+                                          return Padding(
+                                          padding: const EdgeInsets.all(20.0),
+                                          child: Column(
+                                            
+                                            children: [
+                                              Text('Enter dish name:'),
+                                              SizedBox(height: 10,),
+                                              TextField(
+                                                controller: dishContoller,
+                                                decoration: InputDecoration(
+                                                 // hintText: orderList['dish']??'Input Dish',
+                                                 // label: Text(),
+                                                  border: OutlineInputBorder(
+                                                    borderSide: BorderSide(width: 1),
+                                                    borderRadius: BorderRadius.all(Radius.circular(10))
+                                                  )
+                                                ),
+                                                onChanged: (value) => setState(() {
+                                                  dish = value;
+                                                }),
+                                              ),
+                                              SizedBox(height: 20,),
+                                              Text('Select soft drings:'),
+                                              SizedBox(height: 10,),
+                                              DropdownMenu(
+                                                //hintText: orderList['softDr']??'Select Soft Drings',
+                                                //label: Text(orderList['softDr']),
+                                                width: double.maxFinite,
+                                               // initialSelection: orderList['softDr']?? 'Select one',
+                                                dropdownMenuEntries: dropDownItems,
+                                                controller: dringsContoller,
+                                                onSelected: (val){
+                                                  setState(() {
+                                                    softDrings = val.toString();
+                                                  });
+                                                },
+                                              ),
+                                              SizedBox(height: 20,),
+                                              Text('Select spice:'),
+                                              SizedBox(height: 10,),
+                                              Slider(
+                                                
+                                               // value: (orderList['spice'] as num?)?.toDouble()?? 100.0, 
+                                                value: spice,
+                                                divisions: 2,
+                                                min: 100,
+                                                max: 300,
+                                                label: spice.round().toString(),
+                                                onChanged: (val){
+                                                  setModalState(() {
+                                                    spice = val;
+                                                  });
+                                                }
+                                              ),
+                                              SizedBox(height: 20,),
+                                              ElevatedButton(
+                                                onPressed: ()async{
+                                                  String uid = randomString(10);
+                                                  print('uid: $uid, dish: $dish, softDr: $softDrings, spice: $spice');
+                                                  await FireStore.addToDatabase(uid, dish, softDrings, spice);
+                                                  Navigator.pop(context);
+                                                }, 
+                                                child: Text('Confirm Order')
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                        }
+                                      );
+                                    }
+                                    );
         },
         child: Icon(Icons.add),
         ),
